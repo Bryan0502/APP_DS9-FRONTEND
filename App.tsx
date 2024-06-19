@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import BottomNav from './src/components/home/BotttomNav';
 import Login from './src/pages/Login';
 import { View } from 'react-native';
+import UserSession from './src/models/UserSession';
 
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
+    UserSession.clearUserId();
     setIsLoggedIn(false);
   };
 

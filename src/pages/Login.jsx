@@ -2,17 +2,49 @@
 // Login.js
 import React, { useState } from 'react';
 import { View, TouchableOpacity, TextInput, Text, StyleSheet, Image, ImageBackground } from 'react-native';
+import UserSession from '../models/UserSession'; // Importa la clase
 import Logo from '../images/logo.png';
 import BackgroundImage from '../images/background.jpg'; 
 
 const Login = ({ onLogin }) => {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Aqui se agrega la logica de inicio de sesion
-        onLogin();
+    const handleLogin = async () => {
+        console.log(email)
+        console.log(password)
+        try {
+            const response = await fetch('http://192.168.0.125:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Manejar la respuesta del backend según sea necesario
+                console.log(data);
+
+                if (data && data.data && data.data._id) {
+                    UserSession.setUserId(data.data._id); // Guardar el ID del usuario
+                }
+
+                const idUser = UserSession.getUserId();
+
+                console.log(idUser);
+
+                onLogin(); // Llamar a la función onLogin si el login es exitoso
+            } else {
+                // Manejar errores de autenticación
+                const errorData = await response.json();
+                console.error(errorData);
+            }
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error);
+        }
     };
 
     return (
@@ -31,8 +63,8 @@ const Login = ({ onLogin }) => {
                         style={styles.input}
                         placeholder="Username"
                         placeholderTextColor="white"
-                        value={username}
-                        onChangeText={setUsername}
+                        value={email}
+                        onChangeText={setEmail}
                     />
                     
                     <Text style={styles.label}>Password</Text>

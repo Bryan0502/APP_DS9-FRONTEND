@@ -2,24 +2,18 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native';
 
 const Perfil = ({ handleLogout }) => {
+
   const repartidor = {
     name: 'John Doe',
     email: 'johndoe@example.com',
     phone: '+507 6000-0000',
     birthday: 'June 1st, 2000',
     avatar: 'https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?rs=1&pid=ImgDetMain',
-    vehicle: {
-      make: 'Toyota',
-      model: 'Corolla',
-      year: '2015',
-      plate: 'XYZ 123',
-    },
-    rating: 4.5,
     deliveryHistory: [
-      { id: '1', date: '2024-06-01', time: '10:30 AM', address: 'Calle 123, Ciudad de Panamá', rating: 5 },
-      { id: '2', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá', rating: 4 },
-      { id: '3', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá', rating: 4 },
-      { id: '4', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá', rating: 4 },
+      { id: '1', date: '2024-06-01', time: '10:30 AM', address: 'Calle 123, Ciudad de Panamá'},
+      { id: '2', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
+      { id: '3', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
+      { id: '4', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
 
     ],
   };
@@ -29,7 +23,6 @@ const Perfil = ({ handleLogout }) => {
       <Text style={styles.deliveryText}>Fecha: {item.date}</Text>
       <Text style={styles.deliveryText}>Hora: {item.time}</Text>
       <Text style={styles.deliveryText}>Dirección: {item.address}</Text>
-      <Text style={styles.deliveryText}>Calificación: {item.rating} ★</Text>
     </View>
   );
 
@@ -43,9 +36,6 @@ const Perfil = ({ handleLogout }) => {
         <Text style={styles.infoText}>Email: {repartidor.email}</Text>
         <Text style={styles.infoText}>Teléfono: {repartidor.phone}</Text>
         <Text style={styles.infoText}>Fecha de Nacimiento: {repartidor.birthday}</Text>
-        <Text style={styles.infoText}>Vehículo: {repartidor.vehicle.make} {repartidor.vehicle.model} ({repartidor.vehicle.year})</Text>
-        <Text style={styles.infoText}>Placa: {repartidor.vehicle.plate}</Text>
-        <Text style={styles.infoText}>Calificación: {repartidor.rating} ★</Text>
       </View>
       <View style={styles.historyContainer}>
         <Text style={styles.sectionTitle}>Historial de Pedidos</Text>

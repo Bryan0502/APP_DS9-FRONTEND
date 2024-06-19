@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PedidoInfo from '../components/pedidos/PedidoInfo';
+import ImageUpload from '../components/pedidos/ImageUpload';
 
 const Stack = createStackNavigator();
 
@@ -17,15 +18,13 @@ const pedidosData = [
 
 const Pedidos = ({ navigation }) => {
   const [pedidos, setPedidos] = useState(pedidosData);
-  const [filtro, setFiltro] = useState('nuevo');
+  const [filtro, setFiltro] = useState('pendiente');
 
   // filtrar pedidos por estados
   const filtrarPedidos = (estado) => {
-    if (estado === 'nuevo') {
-      setPedidos(pedidosData.filter(pedido => pedido.estado === 'nuevo'));
-    } else if (estado === 'pendiente') {
+    if (estado === 'pendiente') {
       setPedidos(pedidosData.filter(pedido => pedido.estado === 'pendiente'));
-    } else {
+    } else if (estado === 'completado'){
       setPedidos(pedidosData.filter(pedido => pedido.estado === 'completado'));
     }
     setFiltro(estado);
@@ -37,11 +36,12 @@ const Pedidos = ({ navigation }) => {
         {(props) => <PedidosScreen {...props} navigation={navigation} pedidos={pedidos} filtrarPedidos={filtrarPedidos} filtro={filtro} />}
       </Stack.Screen>
       <Stack.Screen name="PedidoInfo" component={PedidoInfo} />
+      <Stack.Screen name="ImageUpload" component={ImageUpload} />
     </Stack.Navigator>
   );
 };
 
-// ppara renderizar los pedidos, ver el listado
+// Para renderizar los pedidos, ver el listado
 const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -60,12 +60,7 @@ const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
     <View style={styles.container}>
       <Text style={styles.text}>Lista de Pedidos</Text>
       <View style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterButton, filtro === 'nuevo' && styles.filterButtonSelected]}
-          onPress={() => filtrarPedidos('nuevo')}
-        >
-          <Text style={[styles.filterButtonText, filtro === 'nuevo' && styles.filterButtonTextSelected]}>Nuevos</Text>
-        </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.filterButton, filtro === 'pendiente' && styles.filterButtonSelected]}
           onPress={() => filtrarPedidos('pendiente')}
@@ -126,7 +121,7 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginBottom: 30,
   },
   filterButton: {
