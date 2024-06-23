@@ -1,65 +1,20 @@
-Dashboard Administrativo - Prototipo
-Este proyecto es un prototipo de aplicación Android desarrollado con React Native para crear un Dashboard administrativo. Utiliza JavaScript para la lógica de la aplicación y PHP para la conexión a la base de datos mediante PHPMyAdmin.
+#Cosas Necesarias
 
-Cosas Necesarias
-Antes de comenzar, asegúrate de tener instalado lo siguiente:
+Instalar Nodejs
+Instalar un JDK (Preferible el 17)
+Instalar un SDK (Esto depende de la version android del dispositivo donde vayan a correr el app)
+#Instrucciones para correr el proyecto
 
-Node.js
-JDK (versión 17 recomendada)
-SDK de Android (dependiendo de la versión de Android del dispositivo objetivo)
-Instrucciones para correr el proyecto
-Para ejecutar la aplicación en un emulador Android o dispositivo físico, sigue estos pasos:
+Ejecutan su emulador Android de preferencia (Puede ser un dispositivo emulado en Android Studio o su propio teléfono conectado)
+Se ubican en la carpeta raiz del proyecto y ejecutan el comando "npm start" en la terminal, esto les abrirá el Metro.
+Una vez se termine de cargar el Metro, les saldran diferentes opciones, Eligen la opcion "A" para ejecutar en android. Empezará a cargar el app en el dispositivo.
+Mientras el proyecto esté en ejecución, pueden presionar la letra R en la terminal para volver a cargar la aplicación.
+#Estructura Básica
 
-Iniciar el emulador Android:
+La estructura es muy parecida a proyectos React + Vite, los componentes, imagenes y paginas están en la carpeta "SRC", sugiero que ahí se cree la carpeta CSS para vincular el mismo en las páginas. Si prefieren hacer un solo archivo CSS global, pueden crear un index.css y vincularlo al APP.TSX .
+Todas las dependecencias se encuentras en el package.json, si necesitan eliminar node_modules pueden hacerlo y luego ejecutar en la terminal el comando "npm install"
+Recomiendo no mover ni el gradle, ni ninguna configuración del proyecto.
 
-Ejecuta tu emulador Android preferido (puede ser un dispositivo emulado en Android Studio o tu propio teléfono conectado).
-Preparar el entorno de desarrollo:
+hazme un mejor readme que este. si crees que necesita mas informacion agregala.
 
-Abre una terminal y navega hasta la carpeta raíz del proyecto.
-Ejecutar el servidor de desarrollo:
-
-bash
-Copiar código
-npm start
-Esto iniciará el Metro Bundler, que es necesario para compilar y ejecutar la aplicación.
-
-Compilar y ejecutar en Android:
-
-Una vez que el Metro Bundler esté completamente cargado, verás varias opciones en la terminal.
-Presiona a para compilar y ejecutar la aplicación en el emulador o dispositivo Android conectado.
-Recargar la aplicación:
-
-Durante el desarrollo, puedes presionar r en la terminal para recargar la aplicación en el emulador o dispositivo.
-Estructura del Proyecto
-El proyecto sigue una estructura típica de aplicaciones React Native:
-
-/src: Contiene los archivos fuente del frontend desarrollado en JavaScript (React Native).
-/src/components: Componentes reutilizables de la aplicación.
-/src/assets: Archivos estáticos como imágenes y otros recursos.
-/src/screens: Pantallas principales de la aplicación.
-/src/styles: Estilos CSS para los componentes y pantallas.
-Gestión de Dependencias
-Todas las dependencias del proyecto están especificadas en el archivo package.json. Para instalarlas, puedes ejecutar:
-
-bash
-Copiar código
-npm install
-Esto instalará todas las dependencias necesarias para el proyecto.
-
-Notas adicionales
-Configuración de CSS: Se recomienda organizar los estilos en la carpeta styles dentro de src. Puedes utilizar un archivo index.css para estilos globales o vincular CSS específico a cada componente según sea necesario.
-
-Gradle y Configuración del Proyecto: Es recomendable no modificar ni mover las configuraciones de Gradle u otras configuraciones del proyecto, a menos que sea absolutamente necesario y se comprenda completamente el impacto.
-
-Contribución
-Si deseas contribuir a este proyecto, sigue estos pasos:
-
-Haz un fork del repositorio.
-Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
-Realiza tus cambios y realiza commit de estos (git commit -am 'Agrega nueva funcionalidad').
-Haz push de la rama (git push origin feature/nueva-funcionalidad).
-Abre un Pull Request en GitHub.
-Autor
-Bryan (Agrega tu información de contacto si deseas)
-Licencia
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+es un app android usando react native
