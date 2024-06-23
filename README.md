@@ -25,4 +25,4 @@ Para ejecutar la aplicación en un emulador Android o dispositivo físico, sigue
 3. **Ejecutar el servidor de desarrollo:**
 
    ```bash
-   npm start
+   npx react-native run-android
