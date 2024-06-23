@@ -14,7 +14,3 @@ Mientras el proyecto esté en ejecución, pueden presionar la letra R en la term
 La estructura es muy parecida a proyectos React + Vite, los componentes, imagenes y paginas están en la carpeta "SRC", sugiero que ahí se cree la carpeta CSS para vincular el mismo en las páginas. Si prefieren hacer un solo archivo CSS global, pueden crear un index.css y vincularlo al APP.TSX .
 Todas las dependecencias se encuentras en el package.json, si necesitan eliminar node_modules pueden hacerlo y luego ejecutar en la terminal el comando "npm install"
 Recomiendo no mover ni el gradle, ni ninguna configuración del proyecto.
-
-hazme un mejor readme que este. si crees que necesita mas informacion agregala.
-
-es un app android usando react native
