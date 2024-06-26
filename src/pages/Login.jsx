@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
         console.log(email)
         console.log(password)
         try {
-            const response = await fetch('http://192.168.0.125:3000/login', {
+            const response = await fetch('http://192.168.1.132:3000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
