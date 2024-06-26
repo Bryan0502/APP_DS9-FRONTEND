@@ -4,14 +4,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PedidoInfo from '../components/pedidos/PedidoInfo';
 import ImageUpload from '../components/pedidos/ImageUpload';
 import UserSession from '../models/UserSession';
+import Pedido from '../models/Pedido';
 
 const Stack = createStackNavigator();
-const userId = UserSession.getUserId();
+
+let bryan = 0;
 
 // Fetch shipments from the endpoint based on the user ID
 async function fetchShipments(userId) {
   try {
-    const response = await fetch(`http://192.168.1.132:3000/pedidos/${userId}`);
+    console.log('user id es '+userId);
+    const response = await fetch('http://192.168.1.132:3000/pedidos/'+userId);
     
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -26,27 +29,39 @@ async function fetchShipments(userId) {
 }
 
 const Pedidos = ({ navigation }) => {
+  const [pedidosData, setPedidosData] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [filtro, setFiltro] = useState('pending');
 
   useEffect(() => {
-    fetchShipments(userId)
+    if(bryan === 0){
+      bryan = 1;
+      const userId = UserSession.getUserId();
+      fetchShipments(userId)
       .then(data => {
+        console.log(data)
+        const pedidoInstance = new Pedido(data);
+        pedidoInstance.setPedido(data);
         setPedidos(data);
-        filtrarPedidos('pending', data);  // Filter the initial data
+        setPedidosData(data);
+        filtrarPedidos(filtro, data);  // Filter the initial data based on current filtro state
       })
       .catch(error => console.error('Error:', error));
-  }, []);
-
-  // Filter pedidos by status
-  const filtrarPedidos = (status, data = pedidos) => {
-    if (status === 'pending') {
-      setPedidos(data.filter(pedido => pedido.status === 'pending'));
-    } else if (status === 'completed') {
-      setPedidos(data.filter(pedido => pedido.status === 'completed'));
+    } else{
+      setPedidos(pedidosData);
+      filtrarPedidos(filtro, pedidosData);
     }
-    setFiltro(status);
-  };
+  }, [filtro]); // Add 'filtro' as a dependency
+
+ // Filter pedidos by status
+const filtrarPedidos = (status, data = pedidos) => {
+  if (status === 'pending') {
+    setPedidos(data.filter(pedido => pedido.status === 'pending'));
+  } else if (status === 'completed') {
+    setPedidos(data.filter(pedido => pedido.status === 'completed'));
+  }
+  setFiltro(status);
+};
 
   return (
     <Stack.Navigator>
@@ -63,11 +78,11 @@ const Pedidos = ({ navigation }) => {
 const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.nombre}>{item.nombre}</Text>
-      <Text>{item.ubicacion}</Text>
+      <Text style={styles.nombre}>Dirección: {item.address ? item.address.address : 'No especificada'}</Text>
+      <Text>Fecha de envío: {item.shippingDate}</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('PedidoInfo', { idPedido: item.id })}
+        onPress={() => navigation.navigate('PedidoInfo', { idPedido: item._id })}
       >
         <Text style={styles.buttonText}>Entregar</Text>
       </TouchableOpacity>

@@ -2,10 +2,14 @@ import React, {useState} from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import UriEntrega from '../../models/UriEntrega';
+import Pedido from '../../models/Pedido';
 
 const PedidoInfo = ({ route, navigation }) => {
   const { idPedido, uriImagen } = route.params; // Obtenemos el id del pedido desde las params
   const [image, setImage] = useState(uriImagen);
+  const instancePedido = new Pedido;
+  const filteredPedido = instancePedido.filterById(idPedido);
+  console.log(filteredPedido)
 
   // Utilizando useCallback para definir la función que se pasará a useFocusEffect
   const handleFocusEffect = React.useCallback(() => {
