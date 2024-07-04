@@ -1,48 +1,43 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, FlatList } from 'react-native';
+import UserSession from '../models/UserSession';
 
 const Perfil = ({ handleLogout }) => {
 
-  const repartidor = {
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    phone: '+507 6000-0000',
-    birthday: 'June 1st, 2000',
-    avatar: 'https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?rs=1&pid=ImgDetMain',
-    deliveryHistory: [
-      { id: '1', date: '2024-06-01', time: '10:30 AM', address: 'Calle 123, Ciudad de Panamá'},
-      { id: '2', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
-      { id: '3', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
-      { id: '4', date: '2024-06-02', time: '2:15 PM', address: 'Avenida 456, Ciudad de Panamá'},
+  const perfil = UserSession.getUserData();
+  const pedidos = UserSession.getUserPedidos();
+  console.log('Pedidos en Perfil:', pedidos);
 
-    ],
+  const repartidor = {
+    avatar: 'https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?rs=1&pid=ImgDetMain'
   };
 
-  const renderDeliveryItem = ({ item }) => (
-    <View style={styles.deliveryItem}>
-      <Text style={styles.deliveryText}>Fecha: {item.date}</Text>
-      <Text style={styles.deliveryText}>Hora: {item.time}</Text>
-      <Text style={styles.deliveryText}>Dirección: {item.address}</Text>
-    </View>
-  );
+    // Función para renderizar cada item de pedido
+    const renderDeliveryItem = ({ item }) => (
+      <View style={styles.deliveryItem}>
+        <Text style={styles.deliveryText}>Dirección: {item.address.address}</Text>
+        <Text style={styles.deliveryText}>Fecha de Envío: {item.shippingDate.split("T")[0]}</Text>
+        <Text style={styles.deliveryText}>ID: {item._id}</Text>
+      </View>
+    );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hola, {repartidor.name}!</Text>
+        <Text style={styles.headerText}>Hola, {perfil.name}!</Text>
         <Image source={{ uri: repartidor.avatar }} style={styles.avatar} />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Email: {repartidor.email}</Text>
-        <Text style={styles.infoText}>Teléfono: {repartidor.phone}</Text>
-        <Text style={styles.infoText}>Fecha de Nacimiento: {repartidor.birthday}</Text>
+        <Text style={styles.infoText}>Email: {perfil.email}</Text>
+        <Text style={styles.infoText}>Teléfono: {perfil.phoneNumber}</Text>
+        <Text style={styles.infoText}>Fecha de Nacimiento: {perfil.birthDate.split("T")[0]}</Text>
       </View>
       <View style={styles.historyContainer}>
         <Text style={styles.sectionTitle}>Historial de Pedidos</Text>
         <FlatList
-          data={repartidor.deliveryHistory}
+          data={pedidos}
           renderItem={renderDeliveryItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogout}>

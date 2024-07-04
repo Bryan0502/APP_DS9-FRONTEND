@@ -16,7 +16,7 @@ const ImageUpload = () => {
         const data = await cameraRef.current.takePictureAsync(options);
         console.log('URI de la imagen capturada:', data.uri);
         uriEntrega.setUri(data.uri);
-        navigation.navigate('PedidoInfo', { idPedido: 'idPedidoEjemplo', uriImagen: data.uri });
+        navigation.navigate('PedidoInfo', {uriImagen: data.uri });
       } catch (error) {
         console.error('Error al capturar imagen:', error);
       }
