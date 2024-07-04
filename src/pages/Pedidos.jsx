@@ -1,34 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PedidoInfo from '../components/pedidos/PedidoInfo';
 import ImageUpload from '../components/pedidos/ImageUpload';
+import UserSession from '../models/UserSession';
+import Pedido from '../models/Pedido';
 
 const Stack = createStackNavigator();
 
-// pedidos quemados
-const pedidosData = [
-  { id: 1, nombre: 'Pedido 1', ubicacion: 'Ubicación 1', estado: 'nuevo' },
-  { id: 2, nombre: 'Pedido 2', ubicacion: 'Ubicación 2', estado: 'pendiente' },
-  { id: 3, nombre: 'Pedido 3', ubicacion: 'Ubicación 3', estado: 'completado' },
-  { id: 4, nombre: 'Pedido 4', ubicacion: 'Ubicación 1', estado: 'nuevo' },
-  { id: 5, nombre: 'Pedido 5', ubicacion: 'Ubicación 2', estado: 'pendiente' },
-  { id: 6, nombre: 'Pedido 6', ubicacion: 'Ubicación 3', estado: 'completado' },
-];
+let bryan = 0;
+
+// Función para obtener los pedidos desde el backend
+async function fetchShipments(userId) {
+  try {
+    const response = await fetch('http://192.168.141.72:3000/pedidos/'+userId);
+    
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+}
 
 const Pedidos = ({ navigation }) => {
-  const [pedidos, setPedidos] = useState(pedidosData);
-  const [filtro, setFiltro] = useState('pendiente');
+  const [pedidosData, setPedidosData] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
+  const [filtro, setFiltro] = useState('pending');
 
-  // filtrar pedidos por estados
-  const filtrarPedidos = (estado) => {
-    if (estado === 'pendiente') {
-      setPedidos(pedidosData.filter(pedido => pedido.estado === 'pendiente'));
-    } else if (estado === 'completado'){
-      setPedidos(pedidosData.filter(pedido => pedido.estado === 'completado'));
+  useEffect(() => {
+    if (bryan === 0) {
+      bryan = 1;
+      const userId = UserSession.getUserId();
+      fetchShipments(userId)
+      .then(data => {
+        const pedidoInstance = new Pedido();
+        pedidoInstance.setPedido(data);
+        UserSession.setUserPedidos(data);
+        console.log('Pedidos traidos de Pedido.js:', pedidoInstance.getPedido());
+        setPedidos(data);
+        setPedidosData(data);
+        filtrarPedidos(filtro, data);
+      })
+      .catch(error => console.error('Error:', error));
+    } else {
+      setPedidos(pedidosData);
+      filtrarPedidos(filtro, pedidosData);
     }
-    setFiltro(estado);
+  }, [filtro]);
+
+  const filtrarPedidos = (status, data = pedidos) => {
+    if (status === 'pending') {
+      setPedidos(data.filter(pedido => pedido.status === 'pending'));
+    } else if (status === 'completed') {
+      setPedidos(data.filter(pedido => pedido.status === 'completed'));
+    }
+    setFiltro(status);
   };
+
+  
 
   return (
     <Stack.Navigator>
@@ -41,18 +75,20 @@ const Pedidos = ({ navigation }) => {
   );
 };
 
-// Para renderizar los pedidos, ver el listado
 const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.nombre}>{item.nombre}</Text>
-      <Text>{item.ubicacion}</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('PedidoInfo', { idPedido: item.id })}
-      >
-        <Text style={styles.buttonText}>Entregar</Text>
-      </TouchableOpacity>
+      <Text style={styles.nombre}>Dirección: {item.address ? item.address.address : 'No especificada'}</Text>
+      <Text>Fecha de envío: {item.shippingDate.split("T")[0]}</Text>
+      <Text>ID: {item._id}</Text>
+      {item.status !== 'completed' && (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('PedidoInfo', { idPedido: item._id, pedidoActual: item })}
+        >
+          <Text style={styles.buttonText}>Entregar</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -60,24 +96,23 @@ const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
     <View style={styles.container}>
       <Text style={styles.text}>Lista de Pedidos</Text>
       <View style={styles.filterContainer}>
-
         <TouchableOpacity
-          style={[styles.filterButton, filtro === 'pendiente' && styles.filterButtonSelected]}
-          onPress={() => filtrarPedidos('pendiente')}
+          style={[styles.filterButton, filtro === 'pending' && styles.filterButtonSelected]}
+          onPress={() => filtrarPedidos('pending')}
         >
-          <Text style={[styles.filterButtonText, filtro === 'pendiente' && styles.filterButtonTextSelected]}>Pendientes</Text>
+          <Text style={[styles.filterButtonText, filtro === 'pending' && styles.filterButtonTextSelected]}>Pendientes</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.filterButton, filtro === 'completado' && styles.filterButtonSelected]}
-          onPress={() => filtrarPedidos('completado')}
+          style={[styles.filterButton, filtro === 'completed' && styles.filterButtonSelected]}
+          onPress={() => filtrarPedidos('completed')}
         >
-          <Text style={[styles.filterButtonText, filtro === 'completado' && styles.filterButtonTextSelected]}>Completados</Text>
+          <Text style={[styles.filterButtonText, filtro === 'completed' && styles.filterButtonTextSelected]}>Completados</Text>
         </TouchableOpacity>
       </View>
       <FlatList
         data={pedidos}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}  // Handle undefined ids
       />
     </View>
   );
@@ -129,6 +164,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginRight: 10,
   },
   filterButtonText: {
     color: '#d4af37',

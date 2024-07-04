@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
         console.log(email)
         console.log(password)
         try {
-            const response = await fetch('http://192.168.0.125:3000/login', {
+            const response = await fetch('http://192.168.141.72:3000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,6 +30,7 @@ const Login = ({ onLogin }) => {
 
                 if (data && data.data && data.data._id) {
                     UserSession.setUserId(data.data._id); // Guardar el ID del usuario
+                    UserSession.setUserData(data.data); // Guardar los datos del usuario
                 }
 
                 const idUser = UserSession.getUserId();
