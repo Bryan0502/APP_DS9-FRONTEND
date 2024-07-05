@@ -85,7 +85,7 @@ const PedidoInfo = ({ route, navigation }) => {
 
               // Mostrar un toast indicando que el pedido se ha completado
               ToastAndroid.show('Pedido completado', ToastAndroid.SHORT);
-              navigation.navigate('PedidosScreen');
+              navigation.navigate('PedidosScreen', { refresh: true });
 
             } else {
                 // Manejar errores de autenticación

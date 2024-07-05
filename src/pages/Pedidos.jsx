@@ -86,7 +86,14 @@ const Pedidos = ({ navigation }) => {
   );
 };
 
-const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro, refreshShipments }) => {
+const PedidosScreen = ({ navigation, route, pedidos, filtrarPedidos, filtro, refreshShipments }) => {
+  
+  useEffect(() => {
+    if (route.params?.refresh) {
+      refreshShipments();
+    }
+  }, [route.params?.refresh]);
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.nombre}>Dirección: {item.address ? item.address.address : 'No especificada'}</Text>
