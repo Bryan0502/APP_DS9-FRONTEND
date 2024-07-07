@@ -13,7 +13,7 @@ let bryan = 0;
 // Función para obtener los pedidos desde el backend
 async function fetchShipments(userId) {
   try {
-    const response = await fetch('http://192.168.141.72:3000/pedidos/'+userId);
+    const response = await fetch('https://app-ds-9-backend.vercel.app/pedidos/'+userId);
     
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -54,6 +54,7 @@ const Pedidos = ({ navigation }) => {
   }, [filtro]);
 
   const refreshShipments = () => {
+    console.log('Refreshing shipments...');
     const userId = UserSession.getUserId();
     fetchShipments(userId)
       .then(data => {

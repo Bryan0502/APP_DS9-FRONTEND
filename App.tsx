@@ -5,7 +5,7 @@
  *
  * @format
  */
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 
 import BottomNav from './src/components/home/BotttomNav';
 import Login from './src/pages/Login';
