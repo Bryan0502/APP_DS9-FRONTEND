@@ -13,7 +13,7 @@ let bryan = 0;
 // Función para obtener los pedidos desde el backend
 async function fetchShipments(userId) {
   try {
-    const response = await fetch('http://192.168.141.72:3000/pedidos/'+userId);
+    const response = await fetch('https://app-ds-9-backend.vercel.app/pedidos/'+userId);
     
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -37,21 +37,33 @@ const Pedidos = ({ navigation }) => {
       bryan = 1;
       const userId = UserSession.getUserId();
       fetchShipments(userId)
-      .then(data => {
-        const pedidoInstance = new Pedido();
-        pedidoInstance.setPedido(data);
-        UserSession.setUserPedidos(data);
-        console.log('Pedidos traidos de Pedido.js:', pedidoInstance.getPedido());
-        setPedidos(data);
-        setPedidosData(data);
-        filtrarPedidos(filtro, data);
-      })
-      .catch(error => console.error('Error:', error));
+        .then(data => {
+          const pedidoInstance = new Pedido();
+          pedidoInstance.setPedido(data);
+          UserSession.setUserPedidos(data);
+          console.log('Pedidos traidos de Pedido.js:', pedidoInstance.getPedido());
+          setPedidos(data);
+          setPedidosData(data);
+          filtrarPedidos(filtro, data);
+        })
+        .catch(error => console.error('Error:', error));
     } else {
       setPedidos(pedidosData);
       filtrarPedidos(filtro, pedidosData);
     }
   }, [filtro]);
+
+  const refreshShipments = () => {
+    console.log('Refreshing shipments...');
+    const userId = UserSession.getUserId();
+    fetchShipments(userId)
+      .then(data => {
+        console.log(data);
+        setPedidosData(data);
+        filtrarPedidos(filtro, data);  // Filter the new data based on current filtro state
+      })
+      .catch(error => console.error('Error:', error));
+  };
 
   const filtrarPedidos = (status, data = pedidos) => {
     if (status === 'pending') {
@@ -62,20 +74,27 @@ const Pedidos = ({ navigation }) => {
     setFiltro(status);
   };
 
-  
-
   return (
     <Stack.Navigator>
       <Stack.Screen name="PedidosScreen" options={{ headerShown: false }}>
-        {(props) => <PedidosScreen {...props} navigation={navigation} pedidos={pedidos} filtrarPedidos={filtrarPedidos} filtro={filtro} />}
+        {(props) => <PedidosScreen {...props} navigation={navigation} pedidos={pedidos} filtrarPedidos={filtrarPedidos} filtro={filtro} refreshShipments={refreshShipments} />}
       </Stack.Screen>
-      <Stack.Screen name="PedidoInfo" component={PedidoInfo} />
+      <Stack.Screen name="PedidoInfo">
+        {(props) => <PedidoInfo {...props} refreshShipments={refreshShipments} />}
+      </Stack.Screen>
       <Stack.Screen name="ImageUpload" component={ImageUpload} />
     </Stack.Navigator>
   );
 };
 
-const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
+const PedidosScreen = ({ navigation, route, pedidos, filtrarPedidos, filtro, refreshShipments }) => {
+  
+  useEffect(() => {
+    if (route.params?.refresh) {
+      refreshShipments();
+    }
+  }, [route.params?.refresh]);
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.nombre}>Dirección: {item.address ? item.address.address : 'No especificada'}</Text>
@@ -84,7 +103,7 @@ const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
       {item.status !== 'completed' && (
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('PedidoInfo', { idPedido: item._id, pedidoActual: item })}
+          onPress={() => navigation.navigate('PedidoInfo', { idPedido: item._id, pedidoActual: item, refreshShipments })}
         >
           <Text style={styles.buttonText}>Entregar</Text>
         </TouchableOpacity>
@@ -107,6 +126,12 @@ const PedidosScreen = ({ navigation, pedidos, filtrarPedidos, filtro }) => {
           onPress={() => filtrarPedidos('completed')}
         >
           <Text style={[styles.filterButtonText, filtro === 'completed' && styles.filterButtonTextSelected]}>Completados</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.refreshButton}
+          onPress={refreshShipments}
+        >
+          <Text style={styles.refreshButtonText}>Refrescar</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -175,6 +200,16 @@ const styles = StyleSheet.create({
   },
   filterButtonTextSelected: {
     color: '#000',
+  },
+  refreshButton: {
+    backgroundColor: '#212121',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  refreshButtonText: {
+    color: '#ffd414',
+    fontWeight: 'bold',
   },
 });
 

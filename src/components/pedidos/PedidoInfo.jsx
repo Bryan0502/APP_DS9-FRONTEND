@@ -70,7 +70,7 @@ const PedidoInfo = ({ route, navigation }) => {
         console.log(uriImagen)
         console.log(url)
         try {
-            const response = await fetch('http://192.168.141.72:3000/pedidos/'+pedido, {
+            const response = await fetch('https://app-ds-9-backend.vercel.app/pedidos/'+pedido, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const PedidoInfo = ({ route, navigation }) => {
 
               // Mostrar un toast indicando que el pedido se ha completado
               ToastAndroid.show('Pedido completado', ToastAndroid.SHORT);
-              navigation.navigate('PedidosScreen');
+              navigation.navigate('PedidosScreen', { refresh: true });
 
             } else {
                 // Manejar errores de autenticación

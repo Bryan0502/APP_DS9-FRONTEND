@@ -32,7 +32,7 @@ class UriEntrega {
     });
 
     try {
-      const response = await fetch('http://192.168.0.125:3000/upload', {
+      const response = await fetch('https://app-ds-9-backend.vercel.app/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
