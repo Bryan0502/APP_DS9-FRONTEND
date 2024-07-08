@@ -131,7 +131,7 @@ const PedidosScreen = ({ navigation, route, pedidos, filtrarPedidos, filtro, ref
           style={styles.refreshButton}
           onPress={refreshShipments}
         >
-          <Text style={styles.refreshButtonText}>Refrescar</Text>
+          <Text style={styles.refreshButtonText}>Actualizar</Text>
         </TouchableOpacity>
       </View>
       <FlatList

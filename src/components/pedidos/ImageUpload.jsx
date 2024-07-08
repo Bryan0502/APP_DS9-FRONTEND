@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Button, Image } from 'react-native';
+import { View, Button, Image, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useNavigation } from '@react-navigation/native';
 import UriEntrega from '../../models/UriEntrega';
@@ -23,22 +23,40 @@ const ImageUpload = () => {
     }
   };
 
-
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
+    <View style={styles.mainContainer}>
+      <View style={styles.cameraContainer}>
         <RNCamera
           ref={cameraRef}
-          style={{ flex: 1 }}
+          style={styles.camera}
           type={RNCamera.Constants.Type.back}
           captureAudio={false}
         />
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <Button title="Tomar Foto" onPress={takePhoto} />
+      <View style={styles.buttonContainer}>
+        <Button title="Tomar Foto" onPress={takePhoto} color="#d4af37" />
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#121212',
+  },
+  cameraContainer: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    margin: 20,
+  },
+});
+
 
 export default ImageUpload;

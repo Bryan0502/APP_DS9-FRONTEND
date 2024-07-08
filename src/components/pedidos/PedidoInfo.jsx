@@ -97,99 +97,135 @@ const PedidoInfo = ({ route, navigation }) => {
         }
     };
 
-  return (
-    <View style={{ flex: 1 }}>
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Mapa del Pedido</Text>
-      <TouchableOpacity onPress={handleOpenGoogleMaps}>
-        <Image source={require('../../images/map.jpg')} style={styles.mapa} />
-      </TouchableOpacity>
-      <Text style={styles.subtitle}>Info:</Text>
-      {/* Aquí muestra la información del pedido */}
-      {pedidoactual ? (
-        <View>
-          <Text>Dirección: {pedidoactual.address ? pedidoactual.address.address : 'No especificada'}</Text>
-          <Text>Descripcion: {pedidoactual.address.description}</Text>
-          <Text>Fecha de envío: {pedidoactual.shippingDate.split('T')[0]}</Text>
-          <Text>Nombre del Cliente: {pedidoactual.user.name +' '+ pedidoactual.user.lastName}</Text>
-          <Text>Teléfono: {pedidoactual.user.phoneNumber}</Text>
-          <Text style={styles.subtitle}>Cervezas:</Text>
-          
-              {pedidoactual.beers.map((beer, index) => (
-                <View key={index}>
-                  <Text>{beer.beer.name} - Cantidad: {beer.quantity}</Text>
-                  <Image source={{ uri: beer.beer.image }} style={styles.beers} />
-                </View>
-              ))}
-        </View>
-      ) : (
-        <Text>Información del pedido no disponible.</Text>
-      )}
-      <Text style={styles.subtitle}>Imagen:</Text>
-      {/* Aquí puedes permitir al usuario cargar una imagen */}
-      <TouchableOpacity style={styles.button} onPress={handleCargarImagen}>
-        <Text style={styles.buttonText}>Cargar Imagen</Text>
-      </TouchableOpacity>
-      {image && (
-        <View style={{ flex: 1 }}>
-          <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: 'center' }} />
-        </View>
-      )}
-      <TouchableOpacity style={styles.buttonabajo} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Entregar</Text>
-      </TouchableOpacity>
-    </ScrollView>
-    </View>
-  );
-};
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          <Text style={styles.title}>Mapa del Pedido</Text>
+          <TouchableOpacity onPress={handleOpenGoogleMaps} style={styles.mapContainer}>
+            <Image source={require('../../images/map.jpg')} style={styles.mapa} />
+          </TouchableOpacity>
+          <Text style={styles.subtitle}>Info:</Text>
+          {pedidoactual ? (
+            <View style={styles.infoContainer}> 
+              <Text style={styles.infoText}>Dirección: {pedidoactual.address ? pedidoactual.address.address : 'No especificada'}</Text>
+              <Text style={styles.infoText}>Descripción: {pedidoactual.address.description}</Text>
+              <Text style={styles.infoText}>Fecha de envío: {pedidoactual.shippingDate.split('T')[0]}</Text>
+              <Text style={styles.infoText}>Nombre del Cliente: {pedidoactual.user.name + ' ' + pedidoactual.user.lastName}</Text>
+              <Text style={styles.infoText}>Teléfono: {pedidoactual.user.phoneNumber}</Text>
+              <Text style={styles.subtitle}>Cervezas:</Text>
+              <View style={styles.beerContainer}>
+                {pedidoactual.beers.map((beer, index) => (
+                  <View key={index} style={styles.beerItem}>
+                    <Image source={{ uri: beer.beer.image }} style={styles.beers} />
+                    <Text style={styles.infoText}>{beer.beer.name} - Cantidad: {beer.quantity}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ) : (
+            <Text style={styles.infoText}>Información del pedido no disponible.</Text>
+          )}
+          <Text style={styles.subtitle}>Imagen:</Text>
+          <TouchableOpacity style={styles.button} onPress={handleCargarImagen}>
+            <Text style={styles.buttonText}>Cargar Imagen</Text>
+          </TouchableOpacity>
+          {image && (
+            <View style={{ flex: 1 }}>
+              <Image source={{ uri: image }} style={styles.uploadedImage} />
+            </View>
+          )}
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Entregar</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFD414',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  mapa: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    marginBottom: 10,
-    borderRadius: 20,
-  },
-  beers: {
-    width: '15%',
-    height: 150,
-    resizeMode: 'contain',
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonabajo: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    marginBottom: 50,
-  },
-  buttonText: {
-    color: '#FFD414',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-});
+  const styles = StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      backgroundColor: '#121212',
+    },
+    container: {
+      flex: 1,
+      backgroundColor: '#121212',
+      paddingTop: 20,
+    },
+    title: {
+      color: '#d4af37',
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: '#fff',
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginTop: 20,
+      marginBottom: 10,
+    },
+    infoContainer: {
+      backgroundColor: '#1c1c1c',
+      padding: 20,
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+    infoText: {
+      color: '#fff',
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    mapContainer: {
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    mapa: {
+      width: '90%',
+      height: 150,
+      borderRadius: 10,
+    },
+    beerContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+    beerItem: {
+      width: '48%',
+      marginBottom: 10,
+    },
+    beers: {
+      width: '100%',
+      height: 150,
+      borderRadius: 10,
+    },
+    button: {
+      marginTop: 20,
+      backgroundColor: '#d4af37',
+      padding: 15,
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+    submitButton: {
+      marginTop: 20,
+      backgroundColor: '#d4af37',
+      padding: 15,
+      borderRadius: 10,
+      alignItems: 'center',
+      marginBottom: 30,
+    },
+    buttonText: {
+      color: '#000',
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    uploadedImage: {
+      width: 200,
+      height: 200,
+      alignSelf: 'center',
+      marginTop: 10,
+    },
+  });
 
 export default PedidoInfo;
